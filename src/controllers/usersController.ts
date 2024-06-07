@@ -7,7 +7,7 @@ const Prisma = new PrismaClient()
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
+    console.log(req.body)
 
     const { name, email, contact, role, password } = req.body
     const data: { id: string } = await Prisma.user.create({
@@ -65,15 +65,15 @@ export const updateUser = async (req: Request, res: Response) => {
     })
 
     if (validId !== null) {
-     const data =  await Prisma.user.update({
+      const data = await Prisma.user.update({
         where: { id: req.params.id },
         data: userData,
       })
       return generalResponse(res, data, 'User Updated Successfully', 'success', false, 200)
     } else {
-      return generalResponse(res, "", 'User Not Found', 'success', false, 200)
+      return generalResponse(res, '', 'User Not Found', 'success', false, 200)
     }
-  }catch (error) {
+  } catch (error) {
     return generalResponse(res, error, '', 'error', false, 400)
   }
 }

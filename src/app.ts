@@ -2,15 +2,15 @@ import express, { Application } from 'express'
 import cors from 'cors'
 import swaggerui from 'swagger-ui-express'
 import YAML from 'yamljs'
-import bodyParser from "body-parser";
+import bodyParser from 'body-parser'
 
 import { config } from 'dotenv'
 import router from './routes/route'
 const app: Application = express()
 config()
 
-app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json())
 
 const swaggerJSDOC = YAML.load('src/app.yaml')
 app.use('/api', swaggerui.serve, swaggerui.setup(swaggerJSDOC))

@@ -1,5 +1,4 @@
-
-swagger: "2.0"
+swagger: '2.0'
 info:
   title: Book My Show API
   description: This is my BOOK MY SHOW API Documentation
@@ -8,7 +7,6 @@ info:
     -url: http://192.168.10.123:3000
 schemes: [http]
 
-
 #Return Users From get request
 paths:
   /user/getuser:
@@ -16,81 +14,60 @@ paths:
       summary: All User.
       description: Get all Users Details
       responses:
-        200:    # status code
+        200: # status code
           description: Successul Response
-          schema: 
+          schema:
             type: string
-            example: "Users String"
+            example: 'Users String'
         400:
           description: User Error
-          schema: 
+          schema:
             type: string
-            example: "Some Error "
-  
+            example: 'Some Error '
+
   /user/create:
     post:
       summary: Adds a new user
       produces:
         - application/json
       consumes:
-        - "multipart/from-data"
+        - multipart/form-data
       parameters:
         - name: Name
-          in: Name
-          description: Name
-          required : true
+          in: formData
+          description: Name of the user
+          required: true
           type: string
         - name: Email
-          in: Email
-          description: Email
-          required : true
+          in: formData
+          description: Email of the user
+          required: true
           type: string
         - name: Password
-          in: Password
-          description: Password
-          required : true
+          in: formData
+          description: Password of the user
+          required: true
           type: string
         - name: Contact
-          in: Contact
-          description: Contact
-          required : true
+          in: formData
+          description: Contact number of the user
+          required: true
           type: string
         - name: Role
-          in: Role
-          enum: [ "owner", "user"]
-          description: Role
-          required : true
+          in: formData
+          description: Role of the user
+          required: true
           type: string
-      #     schema:
-      #       type: object
-      #       required:
-      #         - name
-      #         - email
-      #         - password
-      #         - contact
-      #         - role
-      #       properties:
-      #         name:
-      #           type: string
-      #         email:
-      #           type: string
-      #         password:
-      #           type: string
-      #         contact:
-      #           type: string
-      #         role:
-      #           type: string
+          enum:
+            - owner
+            - user
       responses:
-        200:    # status code
-          description: Successul Response
-          schema: 
-            type: string
-            example: "Users String"
+        200:
+          description: User successfully created
         400:
-          description: User Error
-          schema: 
-            type: string
-            example: "Some Error "
+          description: Bad request
+        500:
+          description: Internal server error
 
   /user/update:
     put:
@@ -100,18 +77,18 @@ paths:
       description: Update an existing user by Id
       operationId: updateUser
       requestBody:
-        description: Update an existent user 
+        description: Update an existent user
         content:
           application/json:
         required: true
       responses:
-        200:    # status code
+        200: # status code
           description: Successul Response
-          schema: 
+          schema:
             type: string
-            example: "Users String"
+            example: 'Users String'
         400:
           description: User Error
-          schema: 
+          schema:
             type: string
-            example: "Some Error "
+            example: 'Some Error '
