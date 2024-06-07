@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -41,7 +38,7 @@ model theaters {
 
   owners User[]
 
-  screes screens[]
+  screens screens[]
 }
 
 model screens {
@@ -88,7 +85,6 @@ model movie_details {
   updated_at DateTime   @updatedAt
   deleted_at DateTime?
   is_deleted Boolean    @default(false)
-  bookings   bookings[] @relation("movie-relation")
 }
 
 model event_details {
@@ -105,7 +101,6 @@ model event_details {
   deleted_at DateTime?
   is_deleted Boolean   @default(false)
 
-  bookings bookings[] @relation("event-relation")
 }
 
 model bookings {
@@ -114,10 +109,7 @@ model bookings {
   user    User   @relation(fields: [user_id], references: [id])
   user_id String
 
-  event    event_details? @relation("event-relation", fields: [event_id], references: [id], map: "eid")
-  movie    movie_details? @relation("movie-relation", fields: [event_id], references: [id], map: "mid")
   event_id String
-
   event_type String
 
   created_at DateTime  @default(now())
@@ -128,6 +120,9 @@ model bookings {
   payment payments?
 
   tickets tickets[]
+
+  // Ensure unique constraint names
+  @@index([event_id, event_type])
 }
 
 model tickets {
