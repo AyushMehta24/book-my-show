@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  contact  String
+  role     String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
+
+  theaters theaters[]
+
+  bookings bookings[]
+}
+
+model theaters {
+  id      String @id @default(uuid())
+  name    String
+  address String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
+
+  owners User[]
+
+  screes screens[]
+}
+
+model screens {
+  id         String   @id @default(uuid())
+  theater    theaters @relation(fields: [theater_id], references: [id])
+  theater_id String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
+
+  seats seats[]
+
+  movies movie_details[]
+}
+
+model seats {
+  id        String    @id @default(uuid())
+  type      String
+  screen_id String
+  fair      Float
+  tickets   tickets[]
+
+  screen screens @relation(fields: [screen_id], references: [id])
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
+}
+
+model movie_details {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  date        String
+  start_time  String
+  screen_id   String
+
+  screen screens @relation(fields: [screen_id], references: [id])
+
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean    @default(false)
+  bookings   bookings[] @relation("movie-relation")
+}
+
+model event_details {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  date        String
+  start_time  String
+  address     String
+  fair        Float
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
+
+  bookings bookings[] @relation("event-relation")
+}
+
+model bookings {
+  id String @id @default(uuid())
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  event    event_details? @relation("event-relation", fields: [event_id], references: [id], map: "eid")
+  movie    movie_details? @relation("movie-relation", fields: [event_id], references: [id], map: "mid")
+  event_id String
+
+  event_type String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
+
+  payment payments?
+
+  tickets tickets[]
+}
+
+model tickets {
+  id String @id @default(uuid())
+
+  bookings   bookings @relation(fields: [booking_id], references: [id])
+  booking_id String
+
+  seats   seats  @relation(fields: [seat_id], references: [id])
+  seat_id String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
+}
+
+model payments {
+  id String @id @default(uuid())
+
+  bookings   bookings @relation(fields: [booking_id], references: [id])
+  booking_id String   @unique
+
+  fair Float
+
+  status Boolean
+}

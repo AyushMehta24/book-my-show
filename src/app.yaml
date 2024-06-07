@@ -1,0 +1,117 @@
+
+swagger: "2.0"
+info:
+  title: Book My Show API
+  description: This is my BOOK MY SHOW API Documentation
+  version: 1.0
+  servers:
+    -url: http://192.168.10.123:3000
+schemes: [http]
+
+
+#Return Users From get request
+paths:
+  /user/getuser:
+    get:
+      summary: All User.
+      description: Get all Users Details
+      responses:
+        200:    # status code
+          description: Successul Response
+          schema: 
+            type: string
+            example: "Users String"
+        400:
+          description: User Error
+          schema: 
+            type: string
+            example: "Some Error "
+  
+  /user/create:
+    post:
+      summary: Adds a new user
+      produces:
+        - application/json
+      consumes:
+        - "multipart/from-data"
+      parameters:
+        - name: Name
+          in: Name
+          description: Name
+          required : true
+          type: string
+        - name: Email
+          in: Email
+          description: Email
+          required : true
+          type: string
+        - name: Password
+          in: Password
+          description: Password
+          required : true
+          type: string
+        - name: Contact
+          in: Contact
+          description: Contact
+          required : true
+          type: string
+        - name: Role
+          in: Role
+          enum: [ "owner", "user"]
+          description: Role
+          required : true
+          type: string
+      #     schema:
+      #       type: object
+      #       required:
+      #         - name
+      #         - email
+      #         - password
+      #         - contact
+      #         - role
+      #       properties:
+      #         name:
+      #           type: string
+      #         email:
+      #           type: string
+      #         password:
+      #           type: string
+      #         contact:
+      #           type: string
+      #         role:
+      #           type: string
+      responses:
+        200:    # status code
+          description: Successul Response
+          schema: 
+            type: string
+            example: "Users String"
+        400:
+          description: User Error
+          schema: 
+            type: string
+            example: "Some Error "
+
+  /user/update:
+    put:
+      tags:
+        - pet
+      summary: Update an existing user
+      description: Update an existing user by Id
+      operationId: updateUser
+      requestBody:
+        description: Update an existent user 
+        content:
+          application/json:
+        required: true
+      responses:
+        200:    # status code
+          description: Successul Response
+          schema: 
+            type: string
+            example: "Users String"
+        400:
+          description: User Error
+          schema: 
+            type: string
+            example: "Some Error "
