@@ -4,7 +4,7 @@ info:
   description: This is my BOOK MY SHOW API Documentation
   version: 1.0
   servers:
-    -url: http://192.168.10.123:3000
+    -url: http://localhost:3000
 schemes: [http]
 
 #Return Users From get request
@@ -12,7 +12,7 @@ paths:
   /user/getuser:
     get:
       tags:
-      - User
+        - User
       summary: All User.
       description: Get all Users Details
       responses:
@@ -30,41 +30,41 @@ paths:
   /user/create:
     post:
       tags:
-      - User
+        - User
       summary: Adds a new user
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - name: name
-        in: formData
-        description: Name of the user
-        required: true
-        type: string
-      - name: email
-        in: formData
-        description: Email of the user
-        required: true
-        type: string
-      - name: password
-        in: formData
-        description: Password of the user
-        required: true
-        type: string
-      - name: contact
-        in: formData
-        description: Contact number of the user
-        required: true
-        type: string
-      - name: role
-        in: formData
-        description: Role of the user
-        required: true
-        type: string
-        enum:
-        - owner
-        - user
+        - name: name
+          in: formData
+          description: Name of the user
+          required: true
+          type: string
+        - name: email
+          in: formData
+          description: Email of the user
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: Password of the user
+          required: true
+          type: string
+        - name: contact
+          in: formData
+          description: Contact number of the user
+          required: true
+          type: string
+        - name: role
+          in: formData
+          description: Role of the user
+          required: true
+          type: string
+          enum:
+            - owner
+            - user
       responses:
         200:
           description: User successfully created
@@ -76,40 +76,40 @@ paths:
   /user/update/{id}:
     put:
       tags:
-      - User
+        - User
       summary: Update a user
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - in: path
-        name: id
-        required: true
-        type: string
-      - name: name
-        in: formData
-        description: Name of the user
-        type: string
-      - name: email
-        in: formData
-        description: Email of the user
-        type: string
-      - name: password
-        in: formData
-        description: Password of the user
-        type: string
-      - name: contact
-        in: formData
-        description: Contact number of the user
-        type: string
-      - name: role
-        in: formData
-        description: Role of the user
-        type: string
-        enum:
-        - owner
-        - user
+        - in: path
+          name: id
+          required: true
+          type: string
+        - name: name
+          in: formData
+          description: Name of the user
+          type: string
+        - name: email
+          in: formData
+          description: Email of the user
+          type: string
+        - name: password
+          in: formData
+          description: Password of the user
+          type: string
+        - name: contact
+          in: formData
+          description: Contact number of the user
+          type: string
+        - name: role
+          in: formData
+          description: Role of the user
+          type: string
+          enum:
+            - owner
+            - user
       responses:
         200:
           description: User successfully Updated
@@ -121,17 +121,17 @@ paths:
   /user/delete/{id}:
     delete:
       tags:
-      - User
+        - User
       summary: Delete a User
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - in: path
-        name: id
-        required: true
-        type: string
+        - in: path
+          name: id
+          required: true
+          type: string
       responses:
         200:
           description: User successfully created
@@ -143,7 +143,7 @@ paths:
   /theater/getalltheater:
     get:
       tags:
-      - Theater
+        - Theater
       summary: All Theater.
       description: Get all Theaters Details
       responses:
@@ -161,28 +161,28 @@ paths:
   /theater/create:
     post:
       tags:
-      - Theater
+        - Theater
       summary: Adds a new theatre
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - name: name
-        in: formData
-        description: Name of the theatre
-        required: true
-        type: string
-      - name: address
-        in: formData
-        description: Address of the theatre
-        required: true
-        type: string
-      - name: owner_id
-        in: formData
-        description: Id of Owner
-        required: true
-        type: string
+        - name: name
+          in: formData
+          description: Name of the theatre
+          required: true
+          type: string
+        - name: address
+          in: formData
+          description: Address of the theatre
+          required: true
+          type: string
+        - name: owner_id
+          in: formData
+          description: Id of Owner
+          required: true
+          type: string
       responses:
         200:
           description: Theatre successfully created
@@ -194,25 +194,25 @@ paths:
   /theater/update/{id}:
     put:
       tags:
-      - Theater
+        - Theater
       summary: Update a Theater
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - in: path
-        name: id
-        required: true
-        type: string
-      - name: name
-        in: formData
-        description: Name of the Theater
-        type: string
-      - name: address
-        in: formData
-        description: Address of the Theater
-        type: string
+        - in: path
+          name: id
+          required: true
+          type: string
+        - name: name
+          in: formData
+          description: Name of the Theater
+          type: string
+        - name: address
+          in: formData
+          description: Address of the Theater
+          type: string
       responses:
         200:
           description: Theater successfully updated
@@ -224,17 +224,17 @@ paths:
   /theater/delete/{id}:
     delete:
       tags:
-      - Theater
+        - Theater
       summary: Delete a Theater
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - in: path
-        name: id
-        required: true
-        type: string
+        - in: path
+          name: id
+          required: true
+          type: string
       responses:
         200:
           description: User successfully created
@@ -246,18 +246,18 @@ paths:
   /screen/getallscreen/{theaterId}:
     get:
       tags:
-      - Screen
+        - Screen
       summary: All Theater.
       description: Get all Theaters Details
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - in: path
-        name: theaterId
-        required: true
-        type: string
+        - in: path
+          name: theaterId
+          required: true
+          type: string
       responses:
         200: # status code
           description: Successul Response
@@ -273,22 +273,22 @@ paths:
   /screen/create/{theaterId}:
     post:
       tags:
-      - Screen
+        - Screen
       summary: Adds a new Screen
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - in: path
-        name: theaterId
-        required: true
-        type: string
-      - name: screen
-        in: formData
-        description: Number of screens
-        required: true
-        type: number
+        - in: path
+          name: theaterId
+          required: true
+          type: string
+        - name: screen
+          in: formData
+          description: Number of screens
+          required: true
+          type: number
       responses:
         200:
           description: Theatre successfully created
@@ -300,28 +300,28 @@ paths:
   /screen/deletescreen:
     delete:
       tags:
-      - Screen
+        - Screen
       summary: Delete a Screen
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - name: ownerId
-        in: formData
-        description: Id of the Owner
-        required: true
-        type: string
-      - name: theaterId
-        in: formData
-        description: Id of Theater
-        required: true
-        type: string
-      - name: screenId
-        in: formData
-        description: Id of Screen
-        required: true
-        type: string
+        - name: ownerId
+          in: formData
+          description: Id of the Owner
+          required: true
+          type: string
+        - name: theaterId
+          in: formData
+          description: Id of Theater
+          required: true
+          type: string
+        - name: screenId
+          in: formData
+          description: Id of Screen
+          required: true
+          type: string
       responses:
         200:
           description: Screen successfully deleted
@@ -333,23 +333,23 @@ paths:
   /seattype/create:
     post:
       tags:
-      - Seat Type
+        - Seat Type
       summary: Adds a new seat type
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - name: type
-        in: formData
-        description: Name of the seat type
-        required: true
-        type: string
-      - name: fair
-        in: formData
-        description: fair price of the seat
-        required: true
-        type: number
+        - name: type
+          in: formData
+          description: Name of the seat type
+          required: true
+          type: string
+        - name: fair
+          in: formData
+          description: fair price of the seat
+          required: true
+          type: number
       responses:
         200:
           description: Seat type successfully created
@@ -361,28 +361,61 @@ paths:
   /seattype/update/{id}:
     put:
       tags:
-      - Seat Type
+        - Seat Type
       summary: Update a Theater
       produces:
-      - application/json
+        - application/json
       consumes:
-      - application/x-www-form-urlencoded
+        - application/x-www-form-urlencoded
       parameters:
-      - in: path
-        name: id
-        required: true
-        type: string
-      - name: type
-        in: formData
-        description: Name of the seat type
-        type: string
-      - name: fair
-        in: formData
-        description: Fair price of the seat
-        type: number
+        - in: path
+          name: id
+          required: true
+          type: string
+        - name: type
+          in: formData
+          description: Name of the seat type
+          type: string
+        - name: fair
+          in: formData
+          description: Fair price of the seat
+          type: number
       responses:
         200:
           description: Seat type successfully updated
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /seat/create/{screenId}:
+    post:
+      tags:
+        - Seat
+      summary: Adds a new Seat
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: screenId
+          description: Id of the Screen
+          required: true
+          type: string
+        - name: seat
+          in: formData
+          description: Number of Seat
+          required: true
+          type: number
+        - name: typeId
+          in: formData
+          description: Type of Seat
+          required: true
+          type: string
+      responses:
+        200:
+          description: Seat successfully created
         400:
           description: Bad request
         500:

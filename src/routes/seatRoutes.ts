@@ -1,20 +1,21 @@
 // routes/seatRoutes.ts
 
 import express, { Router } from 'express'
-import { createSeat, getSeatById, updateSeat, deleteSeat } from '../controllers/seatController'
+import { createSeat } from '../controllers/seatController'
+// import { createSeat, getSeatById, updateSeat, deleteSeat } from '../controllers/seatController1'
 
-const router: Router = express.Router()
+const seat: Router = express.Router()
 
 // POST /seat
-router.post('/', createSeat)
+seat.post('/create/:screenId', createSeat)
 
-// GET /seat/:id
-router.get('/:id', getSeatById)
+// // GET /seat/:id
+// seat.get('/:id', getSeatById)
 
-// PUT /seat/:id
-router.put('/:id', updateSeat)
+// // PUT /seat/:id
+// seat.put('/:id', updateSeat)
 
-// DELETE /seat/:id
-router.delete('/:id', deleteSeat)
+// // DELETE /seat/:id
+// seat.delete('/:id', deleteSeat)
 
-export default router
+export default seat

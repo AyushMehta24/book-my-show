@@ -62,7 +62,7 @@ model seats {
   tickets   tickets[]
 
   seatType   seat_types @relation(fields: [seatTypeId], references: [id])
-  seatTypeId String     @unique
+  seatTypeId String     
 
   screen screens @relation(fields: [screen_id], references: [id])
 
@@ -77,7 +77,7 @@ model seat_types {
   type String
   fair Float
 
-  seat seats?
+  seats seats[]
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt

@@ -68,9 +68,10 @@ export const updateTheater = async (req: Request, res: Response): Promise<void> 
   try {
     const theaterData: Partial<{ name: string; address: string }> = req.body
 
-    const validId: { id: string } | null = await Prisma.user.findUnique({
+    const validId: { id: string } | null = await Prisma.theaters.findUnique({
       where: {
         id: req.params.id,
+        is_deleted: false,
       },
       select: {
         id: true,
