@@ -329,3 +329,61 @@ paths:
           description: Bad request
         500:
           description: Internal server error
+
+  /seattype/create:
+    post:
+      tags:
+      - Seat Type
+      summary: Adds a new seat type
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: type
+        in: formData
+        description: Name of the seat type
+        required: true
+        type: string
+      - name: fair
+        in: formData
+        description: fair price of the seat
+        required: true
+        type: number
+      responses:
+        200:
+          description: Seat type successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /seattype/update/{id}:
+    put:
+      tags:
+      - Seat Type
+      summary: Update a Theater
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      - name: type
+        in: formData
+        description: Name of the seat type
+        type: string
+      - name: fair
+        in: formData
+        description: Fair price of the seat
+        type: number
+      responses:
+        200:
+          description: Seat type successfully updated
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
