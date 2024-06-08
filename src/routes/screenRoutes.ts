@@ -1,20 +1,20 @@
 // routes/screenRoutes.ts
 
 import express, { Router } from 'express'
-import { createScreen, getScreenById, updateScreen, deleteScreen } from '../controllers/screenController'
+import { createScreen, deleteScreen, getAllScreens } from '../controllers/screenController'
 
-const router: Router = express.Router()
+const screen: Router = express.Router()
 
 // POST /screen
-router.post('/', createScreen)
+screen.post('/create/:theaterId', createScreen)
 
 // GET /screen/:id
-router.get('/:id', getScreenById)
+screen.get('/getallscreen/:theaterId', getAllScreens)
 
-// PUT /screen/:id
-router.put('/:id', updateScreen)
+// // PUT /screen/:id
+// screen.put('/:id', updateScreen)
 
-// DELETE /screen/:id
-router.delete('/:id', deleteScreen)
+// // DELETE /screen/:id
+screen.delete('/deletescreen', deleteScreen)
 
-export default router
+export default screen

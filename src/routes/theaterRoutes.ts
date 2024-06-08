@@ -1,20 +1,20 @@
 // routes/theaterRoutes.ts
 
 import express, { Router } from 'express'
-import { createTheater, getTheaterById, updateTheater, deleteTheater } from '../controllers/theaterController'
+import { createTheater, deleteTheater, getAllTheater, updateTheater } from '../controllers/theaterController'
 
-const router: Router = express.Router()
+const theater: Router = express.Router()
 
 // POST /theater
-router.post('/', createTheater)
+theater.post('/create', createTheater)
 
-// GET /theater/:id
-router.get('/:id', getTheaterById)
+// // GET /theater/:id
+theater.get('/getalltheater', getAllTheater)
 
-// PUT /theater/:id
-router.put('/:id', updateTheater)
+// // PUT /theater/:id
+theater.put('/update/:id', updateTheater)
 
-// DELETE /theater/:id
-router.delete('/:id', deleteTheater)
+// // DELETE /theater/:id
+theater.delete('/delete/:id', deleteTheater)
 
-export default router
+export default theater

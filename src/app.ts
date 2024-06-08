@@ -12,8 +12,8 @@ config()
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.json())
 
-const swaggerJSDOC = YAML.load('src/app.yaml')
-app.use('/api', swaggerui.serve, swaggerui.setup(swaggerJSDOC))
+const user = YAML.load('src/app.yaml' )
+app.use('/api', swaggerui.serve, swaggerui.setup(user ))
 
 const port = process.env.PORT || 8000
 

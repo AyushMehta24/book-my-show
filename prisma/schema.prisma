@@ -58,12 +58,26 @@ model screens {
 
 model seats {
   id        String    @id @default(uuid())
-  type      String
   screen_id String
-  fair      Float
   tickets   tickets[]
 
+  seatType   seat_types @relation(fields: [seatTypeId], references: [id])
+  seatTypeId String     @unique
+
   screen screens @relation(fields: [screen_id], references: [id])
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
+}
+
+model seat_types {
+  id   String @id @default(uuid())
+  type String
+  fair Float
+
+  seat seats?
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
@@ -81,10 +95,10 @@ model movie_details {
 
   screen screens @relation(fields: [screen_id], references: [id])
 
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
   deleted_at DateTime?
-  is_deleted Boolean    @default(false)
+  is_deleted Boolean   @default(false)
 }
 
 model event_details {
@@ -100,7 +114,6 @@ model event_details {
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
   is_deleted Boolean   @default(false)
-
 }
 
 model bookings {
@@ -109,7 +122,7 @@ model bookings {
   user    User   @relation(fields: [user_id], references: [id])
   user_id String
 
-  event_id String
+  event_id   String
   event_type String
 
   created_at DateTime  @default(now())

@@ -1,76 +1,130 @@
-// controllers/TheaterController.ts
-
 import { Request, Response } from 'express'
+import generalResponse from '../helper/generalResponse.helper'
 import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+const Prisma = new PrismaClient()
 
 export const createTheater = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, address } = req.body
-    const theater = await prisma.theaters.create({
+    const { name, address, owner_id } = req.body
+
+    const validOwner: { id: string } | null = await Prisma.user.findUnique({
+      where: {
+        id: owner_id,
+        is_deleted: false,
+        role: 'owner',
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validOwner === null) {
+      return generalResponse(res, '', 'There is no such owner.', 'success', false, 200)
+    }
+
+    const theater: { id: string } = await Prisma.theaters.create({
       data: {
         name,
         address,
+        owners: {
+          connect: {
+            id: owner_id,
+          },
+        },
+      },
+      select: {
+        id: true,
       },
     })
-    res.status(201).json({ theater })
+    return generalResponse(res, theater.id, 'Theater inserted successfully', 'success', false, 200)
   } catch (error) {
-    console.error('Error creating theater:', error)
-    res.status(500).json({ error: 'Internal server error' })
+    return generalResponse(res, error, '', 'error', false, 400)
   }
 }
 
-export const getTheaterById = async (req: Request, res: Response): Promise<void> => {
+export const getAllTheater = async (req: Request, res: Response): Promise<void> => {
   try {
-    const theaterId = req.params.id
-    const theater = await prisma.theaters.findUnique({
+    const theater = await Prisma.theaters.findMany({
       where: {
-        id: theaterId,
+        is_deleted: false,
+      },
+      select: {
+        name: true,
+        address: true,
       },
     })
-    if (!theater) {
-      res.status(404).json({ error: 'Theater not found' })
-      return
+
+    if (theater) {
+      return generalResponse(res, theater, 'All Theaters', 'success', false, 200)
+    } else {
+      return generalResponse(res, theater, 'No theater Found', 'success', false, 200)
     }
-    res.status(200).json({ theater })
   } catch (error) {
-    console.error('Error fetching theater:', error)
-    res.status(500).json({ error: 'Internal server error' })
+    return generalResponse(res, error, '', 'error', false, 400)
   }
 }
 
 export const updateTheater = async (req: Request, res: Response): Promise<void> => {
   try {
-    const theaterId = req.params.id
-    const { name, address } = req.body
-    const updatedTheater = await prisma.theaters.update({
+    const theaterData: Partial<{ name: string; address: string }> = req.body
+
+    const validId: { id: string } | null = await Prisma.user.findUnique({
       where: {
-        id: theaterId,
+        id: req.params.id,
       },
-      data: {
-        name,
-        address,
+      select: {
+        id: true,
       },
     })
-    res.status(200).json({ theater: updatedTheater })
+
+    if (validId !== null) {
+      const data = await Prisma.theaters.update({
+        where: { id: req.params.id },
+        data: theaterData,
+        select: {
+          name: true,
+          address: true,
+        },
+      })
+      return generalResponse(res, data, 'Theater Updated Successfully', 'success', false, 200)
+    } else {
+      return generalResponse(res, '', 'Theater Not Found', 'success', false, 200)
+    }
   } catch (error) {
-    console.error('Error updating theater:', error)
-    res.status(500).json({ error: 'Internal server error' })
+    return generalResponse(res, error, '', 'error', false, 400)
   }
 }
 
 export const deleteTheater = async (req: Request, res: Response): Promise<void> => {
   try {
-    const theaterId = req.params.id
-    await prisma.theaters.delete({
+    const id: string = req.params.id
+
+    const validId: { id: string } | null = await Prisma.theaters.findUnique({
       where: {
-        id: theaterId,
+        id: req.params.id,
+      },
+      select: {
+        id: true,
       },
     })
-    res.status(204).send()
+
+    if (validId !== null) {
+      const data: { id: string } = await Prisma.theaters.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_deleted: true,
+        },
+        select: {
+          id: true,
+        },
+      })
+      return generalResponse(res, data, 'Theater Deleted Successfully', 'success', false, 200)
+    } else {
+      return generalResponse(res, '', 'Theater Not Found', 'success', false, 200)
+    }
   } catch (error) {
-    console.error('Error deleting theater:', error)
-    res.status(500).json({ error: 'Internal server error' })
+    return generalResponse(res, error, '', 'error', false, 400)
   }
 }

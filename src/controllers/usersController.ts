@@ -7,8 +7,6 @@ const Prisma = new PrismaClient()
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    console.log(req.body)
-
     const { name, email, contact, role, password } = req.body
     const data: { id: string } = await Prisma.user.create({
       data: {
@@ -22,7 +20,7 @@ export const createUser = async (req: Request, res: Response) => {
         id: true,
       },
     })
-    return generalResponse(res, data, 'User inserted successfully', 'success', false, 200)
+    return generalResponse(res, data.id, 'User inserted successfully', 'success', false, 200)
   } catch (error: any) {
     return generalResponse(res, error, '', 'error', false, 400)
   }
@@ -68,6 +66,12 @@ export const updateUser = async (req: Request, res: Response) => {
       const data = await Prisma.user.update({
         where: { id: req.params.id },
         data: userData,
+        select: {
+          name: true,
+          email: true,
+          contact: true,
+          role: true,
+        },
       })
       return generalResponse(res, data, 'User Updated Successfully', 'success', false, 200)
     } else {
@@ -78,4 +82,37 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 }
 
-// $argon2id$v=19$m=65536,t=3,p=4$wPoLQ6Z9kaXOF77PaemUKw$bOGpOz61EyPAfk9i4DgMkXNivVh2E/NyleD5MQRAK5M
+export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id: string = req.params.id
+
+    const validId: { id: string } | null = await Prisma.user.findUnique({
+      where: {
+        id: req.params.id,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validId !== null) {
+      const data: { id: string } = await Prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_deleted: true,
+        },
+        select: {
+          id: true,
+        },
+      })
+      return generalResponse(res, data, 'User Deleted Successfully', 'success', false, 200)
+    } else {
+      return generalResponse(res, '', 'User Not Found', 'success', false, 200)
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error)
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}

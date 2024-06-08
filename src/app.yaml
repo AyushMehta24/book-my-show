@@ -11,6 +11,8 @@ schemes: [http]
 paths:
   /user/getuser:
     get:
+      tags:
+      - User
       summary: All User.
       description: Get all Users Details
       responses:
@@ -27,40 +29,42 @@ paths:
 
   /user/create:
     post:
+      tags:
+      - User
       summary: Adds a new user
       produces:
-        - application/json
+      - application/json
       consumes:
-        - multipart/form-data
+      - application/x-www-form-urlencoded
       parameters:
-        - name: Name
-          in: formData
-          description: Name of the user
-          required: true
-          type: string
-        - name: Email
-          in: formData
-          description: Email of the user
-          required: true
-          type: string
-        - name: Password
-          in: formData
-          description: Password of the user
-          required: true
-          type: string
-        - name: Contact
-          in: formData
-          description: Contact number of the user
-          required: true
-          type: string
-        - name: Role
-          in: formData
-          description: Role of the user
-          required: true
-          type: string
-          enum:
-            - owner
-            - user
+      - name: name
+        in: formData
+        description: Name of the user
+        required: true
+        type: string
+      - name: email
+        in: formData
+        description: Email of the user
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: Password of the user
+        required: true
+        type: string
+      - name: contact
+        in: formData
+        description: Contact number of the user
+        required: true
+        type: string
+      - name: role
+        in: formData
+        description: Role of the user
+        required: true
+        type: string
+        enum:
+        - owner
+        - user
       responses:
         200:
           description: User successfully created
@@ -69,26 +73,259 @@ paths:
         500:
           description: Internal server error
 
-  /user/update:
+  /user/update/{id}:
     put:
       tags:
-        - pet
-      summary: Update an existing user
-      description: Update an existing user by Id
-      operationId: updateUser
-      requestBody:
-        description: Update an existent user
-        content:
-          application/json:
+      - User
+      summary: Update a user
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: id
         required: true
+        type: string
+      - name: name
+        in: formData
+        description: Name of the user
+        type: string
+      - name: email
+        in: formData
+        description: Email of the user
+        type: string
+      - name: password
+        in: formData
+        description: Password of the user
+        type: string
+      - name: contact
+        in: formData
+        description: Contact number of the user
+        type: string
+      - name: role
+        in: formData
+        description: Role of the user
+        type: string
+        enum:
+        - owner
+        - user
+      responses:
+        200:
+          description: User successfully Updated
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /user/delete/{id}:
+    delete:
+      tags:
+      - User
+      summary: Delete a User
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        200:
+          description: User successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /theater/getalltheater:
+    get:
+      tags:
+      - Theater
+      summary: All Theater.
+      description: Get all Theaters Details
       responses:
         200: # status code
           description: Successul Response
           schema:
             type: string
-            example: 'Users String'
+            example: 'Theater String'
         400:
-          description: User Error
+          description: Theater Error
           schema:
             type: string
             example: 'Some Error '
+
+  /theater/create:
+    post:
+      tags:
+      - Theater
+      summary: Adds a new theatre
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: name
+        in: formData
+        description: Name of the theatre
+        required: true
+        type: string
+      - name: address
+        in: formData
+        description: Address of the theatre
+        required: true
+        type: string
+      - name: owner_id
+        in: formData
+        description: Id of Owner
+        required: true
+        type: string
+      responses:
+        200:
+          description: Theatre successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /theater/update/{id}:
+    put:
+      tags:
+      - Theater
+      summary: Update a Theater
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      - name: name
+        in: formData
+        description: Name of the Theater
+        type: string
+      - name: address
+        in: formData
+        description: Address of the Theater
+        type: string
+      responses:
+        200:
+          description: Theater successfully updated
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /theater/delete/{id}:
+    delete:
+      tags:
+      - Theater
+      summary: Delete a Theater
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        200:
+          description: User successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /screen/getallscreen/{theaterId}:
+    get:
+      tags:
+      - Screen
+      summary: All Theater.
+      description: Get all Theaters Details
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: theaterId
+        required: true
+        type: string
+      responses:
+        200: # status code
+          description: Successul Response
+          schema:
+            type: string
+            example: 'Theater String'
+        400:
+          description: Theater Error
+          schema:
+            type: string
+            example: 'Some Error '
+
+  /screen/create/{theaterId}:
+    post:
+      tags:
+      - Screen
+      summary: Adds a new Screen
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: theaterId
+        required: true
+        type: string
+      - name: screen
+        in: formData
+        description: Number of screens
+        required: true
+        type: number
+      responses:
+        200:
+          description: Theatre successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /screen/deletescreen:
+    delete:
+      tags:
+      - Screen
+      summary: Delete a Screen
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: ownerId
+        in: formData
+        description: Id of the Owner
+        required: true
+        type: string
+      - name: theaterId
+        in: formData
+        description: Id of Theater
+        required: true
+        type: string
+      - name: screenId
+        in: formData
+        description: Id of Screen
+        required: true
+        type: string
+      responses:
+        200:
+          description: Screen successfully deleted
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
