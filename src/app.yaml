@@ -786,3 +786,35 @@ paths:
           description: Bad request
         500:
           description: Internal server error
+
+  /booking/create:
+    post:
+      tags:
+        - Booking
+      summary: Create a Booking
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: userId
+          in: formData
+          description: Id of the User
+          required: true
+          type: string
+        - name: eventId
+          in: formData
+          description: Id of the Event
+          required: true
+          type: string
+        - name: seatId
+          in: formData
+          description: Id of the Seat
+          type: string
+      responses:
+        200:
+          description: Booking successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
