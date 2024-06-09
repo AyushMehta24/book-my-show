@@ -95,8 +95,6 @@ export const createBooking = async (req: Request, res: Response) => {
       },
     })
 
-    // console.log(validMovie?.screen.seats[0].seatTypeId[0].fair)
-
     if (validEvent !== null) {
       const amount = Number(validEvent?.fair)
 
@@ -213,7 +211,6 @@ export const createMultiBooking = async (req: Request, res: Response) => {
           },
         },
       })
-      console.log(validSeat1?.seatTypeId[0].fair)
       const validSeat2 = await Prisma.seats.findUnique({
         where: {
           id: seatId2,

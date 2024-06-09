@@ -43,7 +43,6 @@ export const createMovieDetail = async (req: Request, res: Response): Promise<vo
 
     return generalResponse(res, movie.id, 'Movie created successfully', 'success', false, 200)
   } catch (error: any) {
-    console.log(error)
     return generalResponse(res, error, '', 'error', false, 400)
   }
 }
@@ -153,7 +152,6 @@ export const deleteMovieDetail = async (req: Request, res: Response): Promise<vo
 
     return generalResponse(res, movie.id, 'Movie deleted successfully', 'success', false, 200)
   } catch (error: any) {
-    console.log(error)
     return generalResponse(res, error, '', 'error', false, 400)
   }
 }
@@ -191,7 +189,6 @@ export const allMovieDetail = async (req: Request, res: Response): Promise<void>
 
     return generalResponse(res, movie, 'Movie Details', 'success', false, 200)
   } catch (error: any) {
-    console.log(error)
     return generalResponse(res, error, '', 'error', false, 400)
   }
 }

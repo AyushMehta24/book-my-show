@@ -888,3 +888,55 @@ paths:
           description: Bad request
         500:
           description: Internal server error
+
+  /payment/getbills/{userId}:
+    get:
+      tags:
+        - Payment
+      summary: Get all Pending Bills
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: userId
+          description: Id of the User
+          required: true
+          type: string
+      responses:
+        200:
+          description: All Bills
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /payment/pay/{bookingId}:
+    put:
+      tags:
+        - Payment
+      summary: Make a Payment
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: bookingId
+          required: true
+          type: string
+        - name: status
+          in: formData
+          description: Status of payment
+          type: boolean
+          enum:
+            - true
+            - false
+      responses:
+        200:
+          description: Payment successfully Updated
+        400:
+          description: Bad request
+        500:
+          description: Internal server error

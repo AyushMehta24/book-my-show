@@ -7,6 +7,7 @@ import seat from './seatRoutes'
 import movie from './movieDetailRoutes'
 import event from './eventDetailRoutes'
 import booking from './bookingRoutes'
+import payment from './paymentRoutes'
 const router = express()
 
 router.use('/user', user)
@@ -17,5 +18,6 @@ router.use('/seat', seat)
 router.use('/movie', movie)
 router.use('/event', event)
 router.use('/booking', booking)
+router.use('/payment', payment)
 
 export default router

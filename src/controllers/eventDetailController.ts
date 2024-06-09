@@ -42,7 +42,6 @@ export const createEventDetail = async (req: Request, res: Response): Promise<vo
 export const updateEventDetail = async (req: Request, res: Response): Promise<void> => {
   try {
     const eventId = req.params.eventId
-    console.log(req.params)
     const { address, fair, name, description, date, start_time, ownerId } = req.body
 
     const validEvent = await Prisma.event_details.findUnique({
@@ -129,7 +128,6 @@ export const deleteEventDetail = async (req: Request, res: Response): Promise<vo
   try {
     const ownerId = req.body.ownerId
     const eventId = req.params.eventId
-    console.log(req.body)
 
     const validOwner: { id: string } | null = await Prisma.user.findUnique({
       where: {
@@ -177,7 +175,6 @@ export const deleteEventDetail = async (req: Request, res: Response): Promise<vo
 
     return generalResponse(res, event.id, 'Event deleted successfully', 'success', false, 200)
   } catch (error: any) {
-    console.log(error)
     return generalResponse(res, error, '', 'error', false, 400)
   }
 }

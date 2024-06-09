@@ -1,82 +1,63 @@
-// controllers/PaymentController.ts
-
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
+import generalResponse from '../helper/generalResponse.helper'
 
 const prisma = new PrismaClient()
 
-export const createPayment = async (req: Request, res: Response): Promise<void> => {
+export const makePayment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { bookingId, fair, status } = req.body
-    const payment = await prisma.payments.create({
-      data: {
-        bookings: {
-          connect: { id: bookingId },
-        },
-        fair,
-        status,
-      },
-    })
-    res.status(201).json({ payment })
-  } catch (error) {
-    console.error('Error creating payment:', error)
-    res.status(500).json({ error: 'Internal server error' })
-  }
-}
+    const bookingId = req.params.bookingId
+    const status = req.body.status
 
-export const getPaymentById = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const paymentId = req.params.id
-    const payment = await prisma.payments.findUnique({
-      where: {
-        id: paymentId,
-      },
+    const validBooking = await prisma.payments.findUnique({
+      where: { booking_id: bookingId, status: false },
     })
-    if (!payment) {
-      res.status(404).json({ error: 'Payment not found' })
-      return
+
+    if (validBooking === null) {
+      return generalResponse(res, '', 'Booking not found or already paid', 'success', false, 404)
     }
-    res.status(200).json({ payment })
-  } catch (error) {
-    console.error('Error fetching payment:', error)
-    res.status(500).json({ error: 'Internal server error' })
-  }
-}
-
-export const updatePayment = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const paymentId = req.params.id
-    const { bookingId, fair, status } = req.body
-    const updatedPayment = await prisma.payments.update({
-      where: {
-        id: paymentId,
-      },
+    const payment = await prisma.payments.update({
+      where: { booking_id: bookingId },
       data: {
-        bookings: {
-          connect: { id: bookingId },
-        },
-        fair,
-        status,
+        status: Boolean(status),
       },
     })
-    res.status(200).json({ payment: updatedPayment })
+    return generalResponse(res, payment.id, 'Payment updated successfully', 'success', false, 200)
   } catch (error) {
-    console.error('Error updating payment:', error)
-    res.status(500).json({ error: 'Internal server error' })
+    return generalResponse(res, error, '', 'error', false, 400)
   }
 }
 
-export const deletePayment = async (req: Request, res: Response): Promise<void> => {
+export const getBills = async (req: Request, res: Response): Promise<void> => {
   try {
-    const paymentId = req.params.id
-    await prisma.payments.delete({
+    const userId = req.params.userId
+
+    const validUser = await prisma.user.findUnique({
+      where: { id: userId, is_deleted: false },
+    })
+
+    if (validUser === null) {
+      return generalResponse(res, '', 'No user found', 'success', false, 404)
+    }
+
+    const Bills = await prisma.bookings.findMany({
       where: {
-        id: paymentId,
+        user_id: userId,
+        payment: {
+          status: false,
+        },
+      },
+      select: {
+        payment: {
+          select: {
+            booking_id: true,
+            fair: true,
+          },
+        },
       },
     })
-    res.status(204).send()
+    return generalResponse(res, Bills, 'Pending Bills', 'success', false, 200)
   } catch (error) {
-    console.error('Error deleting payment:', error)
-    res.status(500).json({ error: 'Internal server error' })
+    return generalResponse(res, error, '', 'error', false, 400)
   }
 }

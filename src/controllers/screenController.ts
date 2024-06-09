@@ -25,8 +25,6 @@ export const createScreen = async (req: Request, res: Response): Promise<void> =
 
     let allScreens: string[] = []
 
-    console.log(numScreen)
-
     for (let i: number = 0; i < numScreen; i++) {
       const screen: { id: string } = await Prisma.screens.create({
         data: {

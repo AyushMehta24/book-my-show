@@ -1,20 +1,20 @@
 // routes/ticketRoutes.ts
 
 import express, { Router } from 'express'
-import { createTicket, getTicketById, updateTicket, deleteTicket } from '../controllers/ticketController'
+import { getBills, makePayment } from '../controllers/paymentController'
 
-const router: Router = express.Router()
+const payment: Router = express.Router()
 
 // POST /ticket
-router.post('/', createTicket)
+payment.put('/pay/:bookingId', makePayment)
 
-// GET /ticket/:id
-router.get('/:id', getTicketById)
+// // GET /ticket/:id
+payment.get('/getbills/:userId', getBills)
 
-// PUT /ticket/:id
-router.put('/:id', updateTicket)
+// // PUT /ticket/:id
+// payment.put('/:id', updateTicket)
 
-// DELETE /ticket/:id
-router.delete('/:id', deleteTicket)
+// // DELETE /ticket/:id
+// payment.delete('/:id', deleteTicket)
 
-export default router
+export default payment
