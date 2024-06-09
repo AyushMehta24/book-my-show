@@ -787,6 +787,28 @@ paths:
         500:
           description: Internal server error
 
+  /booking/getbookings/{bookingId}:
+    get:
+      tags:
+        - Booking
+      summary: Get a bookig Details
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: bookingId
+          required: true
+          type: string
+      responses:
+        200:
+          description: Get all Booking Details by BookingId
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
   /booking/create:
     post:
       tags:
@@ -810,6 +832,54 @@ paths:
         - name: seatId
           in: formData
           description: Id of the Seat
+          type: string
+      responses:
+        200:
+          description: Booking successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /booking/createmany:
+    post:
+      tags:
+        - Booking
+      summary: Create a Booking
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: userId
+          in: formData
+          description: Id of the User
+          required: true
+          type: string
+        - name: eventId
+          in: formData
+          description: Id of the Event
+          required: true
+          type: string
+        - name: seatId1
+          in: formData
+          description: Id of the Seat1
+          type: string
+        - name: seatId2
+          in: formData
+          description: Id of the Seat2
+          type: string
+        - name: seatId3
+          in: formData
+          description: Id of the Seat3
+          type: string
+        - name: seatId4
+          in: formData
+          description: Id of the Seat4
+          type: string
+        - name: seatId5
+          in: formData
+          description: Id of the Seat5
           type: string
       responses:
         200:

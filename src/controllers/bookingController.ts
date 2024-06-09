@@ -30,6 +30,18 @@ export const createBooking = async (req: Request, res: Response) => {
       },
       select: {
         id: true,
+        screen: {
+          select: {
+            seats: {
+              where: {
+                id: seatId,
+              },
+              select: {
+                seatTypeId: true,
+              },
+            },
+          },
+        },
       },
     })
 
@@ -40,6 +52,7 @@ export const createBooking = async (req: Request, res: Response) => {
       },
       select: {
         id: true,
+        fair: true,
       },
     })
 
@@ -55,7 +68,7 @@ export const createBooking = async (req: Request, res: Response) => {
       type = 'movie'
     }
 
-    if (validMovie) {
+    if (validMovie! == null) {
       const validSeat = await Prisma.seats.findUnique({
         where: {
           id: seatId,
@@ -75,13 +88,37 @@ export const createBooking = async (req: Request, res: Response) => {
         user_id: userId,
         event_id: eventId,
         event_type: type,
+        seats: 1,
       },
       select: {
         id: true,
       },
     })
 
+    // console.log(validMovie?.screen.seats[0].seatTypeId[0].fair)
+
+    if (validEvent !== null) {
+      const amount = Number(validEvent?.fair)
+
+      const payment = await Prisma.payments.create({
+        data: {
+          booking_id: booking.id,
+          fair: amount,
+          status: false,
+        },
+      })
+    }
+
     if (validMovie !== null) {
+      const amount = Number(validMovie?.screen.seats[0].seatTypeId[0].fair)
+
+      const payment = await Prisma.payments.create({
+        data: {
+          booking_id: booking.id,
+          fair: amount,
+          status: false,
+        },
+      })
       const ticket = await Prisma.tickets.create({
         data: {
           booking_id: booking.id,
@@ -133,6 +170,7 @@ export const createMultiBooking = async (req: Request, res: Response) => {
       },
       select: {
         id: true,
+        fair: true,
       },
     })
 
@@ -148,7 +186,19 @@ export const createMultiBooking = async (req: Request, res: Response) => {
       type = 'movie'
     }
 
-    if (validMovie) {
+    const booking = await Prisma.bookings.create({
+      data: {
+        user_id: userId,
+        event_id: eventId,
+        event_type: type,
+        seats: 5,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validMovie !== null) {
       const validSeat1 = await Prisma.seats.findUnique({
         where: {
           id: seatId1,
@@ -156,8 +206,14 @@ export const createMultiBooking = async (req: Request, res: Response) => {
         },
         select: {
           id: true,
+          seatTypeId: {
+            select: {
+              fair: true,
+            },
+          },
         },
       })
+      console.log(validSeat1?.seatTypeId[0].fair)
       const validSeat2 = await Prisma.seats.findUnique({
         where: {
           id: seatId2,
@@ -165,6 +221,11 @@ export const createMultiBooking = async (req: Request, res: Response) => {
         },
         select: {
           id: true,
+          seatTypeId: {
+            select: {
+              fair: true,
+            },
+          },
         },
       })
       const validSeat3 = await Prisma.seats.findUnique({
@@ -174,6 +235,11 @@ export const createMultiBooking = async (req: Request, res: Response) => {
         },
         select: {
           id: true,
+          seatTypeId: {
+            select: {
+              fair: true,
+            },
+          },
         },
       })
       const validSeat4 = await Prisma.seats.findUnique({
@@ -183,6 +249,11 @@ export const createMultiBooking = async (req: Request, res: Response) => {
         },
         select: {
           id: true,
+          seatTypeId: {
+            select: {
+              fair: true,
+            },
+          },
         },
       })
       const validSeat5 = await Prisma.seats.findUnique({
@@ -192,6 +263,11 @@ export const createMultiBooking = async (req: Request, res: Response) => {
         },
         select: {
           id: true,
+          seatTypeId: {
+            select: {
+              fair: true,
+            },
+          },
         },
       })
       if (validSeat1 === null) {
@@ -209,17 +285,13 @@ export const createMultiBooking = async (req: Request, res: Response) => {
       if (validSeat5 === null) {
         return generalResponse(res, '', 'There is no such seat5.', 'error', false, 404)
       }
-    }
+      const amount =
+        Number(validSeat1?.seatTypeId[0].fair) +
+        Number(validSeat2?.seatTypeId[0].fair) +
+        Number(validSeat3?.seatTypeId[0].fair) +
+        Number(validSeat4?.seatTypeId[0].fair) +
+        Number(validSeat5?.seatTypeId[0].fair)
 
-    const booking = await Prisma.bookings.create({
-      data: {
-        user_id: userId,
-        event_id: eventId,
-        event_type: type,
-      },
-    })
-
-    if (validMovie !== null) {
       const ticket = await Prisma.tickets.createMany({
         data: [
           {
@@ -244,8 +316,112 @@ export const createMultiBooking = async (req: Request, res: Response) => {
           },
         ],
       })
+
+      const payment = await Prisma.payments.create({
+        data: {
+          booking_id: booking.id,
+          fair: amount,
+          status: false,
+        },
+      })
     }
-    return generalResponse(res, booking, 'Booking created successfully', 'success', false, 200)
+
+    if (validEvent !== null) {
+      const amount = Number(validEvent.fair)
+      const payment = await Prisma.payments.create({
+        data: {
+          booking_id: booking.id,
+          fair: 5 * amount,
+          status: false,
+        },
+      })
+    }
+
+    if (validMovie !== null) {
+    }
+    return generalResponse(res, booking, 'Booking created successfully for 5', 'success', false, 200)
+  } catch (error: any) {
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}
+
+export const getBookingDetailsByBookingId = async (req: Request, res: Response) => {
+  try {
+    const bookingId = req.params.bookingId
+
+    const validBooking = await Prisma.bookings.findUnique({
+      where: {
+        id: bookingId,
+        is_deleted: false,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validBooking === null) {
+      return generalResponse(res, '', 'There is no such Booking.', 'error', false, 404)
+    }
+
+    const booking = await Prisma.bookings.findUnique({
+      where: {
+        id: bookingId,
+        is_deleted: false,
+      },
+      select: {
+        id: true,
+        event_id: true,
+        seats: true,
+      },
+    })
+
+    if (booking === null) {
+      return generalResponse(res, '', 'There is no such Booking.', 'error', false, 404)
+    }
+
+    const isMovie = await Prisma.movie_details.findUnique({
+      where: {
+        id: booking.event_id,
+      },
+      select: {
+        name: true,
+        description: true,
+        date: true,
+        start_time: true,
+      },
+    })
+
+    const isEvent = await Prisma.event_details.findUnique({
+      where: {
+        id: booking.event_id,
+        is_deleted: false,
+      },
+      select: {
+        name: true,
+        description: true,
+        date: true,
+        start_time: true,
+        address: true,
+      },
+    })
+
+    if (isMovie) {
+      const movieBooking = await Prisma.bookings.findUnique({
+        where: {
+          id: bookingId,
+        },
+        select: {
+          tickets: {
+            select: {
+              seat_id: true,
+            },
+          },
+        },
+      })
+      return generalResponse(res, { booking, movieBooking }, 'Movie Booking Details', 'success', false, 200)
+    }
+
+    return generalResponse(res, booking, 'Event Booking Details', 'success', false, 200)
   } catch (error: any) {
     return generalResponse(res, error, '', 'error', false, 400)
   }
