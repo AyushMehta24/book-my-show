@@ -1,25 +1,20 @@
 // routes/movieDetailRoutes.ts
 
 import express, { Router } from 'express'
-import {
-  createMovieDetail,
-  getMovieDetailById,
-  updateMovieDetail,
-  deleteMovieDetail,
-} from '../controllers/movieDetailController'
+import { createMovieDetail, updateMovieDetail } from '../controllers/movieController'
 
-const router: Router = express.Router()
+const movie: Router = express.Router()
 
 // POST /movie-detail
-router.post('/', createMovieDetail)
+movie.post('/create', createMovieDetail)
 
-// GET /movie-detail/:id
-router.get('/:id', getMovieDetailById)
+// // GET /movie-detail/:id
+// movie.get('/:id', getMovieDetailById)
 
-// PUT /movie-detail/:id
-router.put('/:id', updateMovieDetail)
+// // PUT /movie-detail/:id
+movie.put('/update/:movieId', updateMovieDetail)
 
-// DELETE /movie-detail/:id
-router.delete('/:id', deleteMovieDetail)
+// // DELETE /movie-detail/:id
+// movie.delete('/:id', deleteMovieDetail)
 
-export default router
+export default movie

@@ -388,6 +388,29 @@ paths:
         500:
           description: Internal server error
 
+  /seat/allseats/{screenId}:
+    get:
+      tags:
+        - Seat
+      summary: Get all Seats
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: screenId
+          description: Id of the Screen
+          required: true
+          type: string
+      responses:
+        200:
+          description: All seats
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
   /seat/create/{screenId}:
     post:
       tags:
@@ -410,12 +433,158 @@ paths:
           type: number
         - name: typeId
           in: formData
-          description: Type of Seat
+          description: Id of Seat Type
           required: true
           type: string
       responses:
         200:
           description: Seat successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /seat/update/{screenId}:
+    put:
+      tags:
+        - Seat
+      summary: update a Seat
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: screenId
+          description: Id of the Screen
+          required: true
+          type: string
+        - name: seatId
+          in: formData
+          description: Id of Seat
+          required: true
+          type: string
+        - name: typeId
+          in: formData
+          description: Id of Seat Type
+          required: true
+          type: string
+      responses:
+        200:
+          description: Seat successfully updated
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /seat/delete/{screenId}:
+    delete:
+      tags:
+        - Seat
+      summary: delete a Seat
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: screenId
+          description: Id of the Screen
+          required: true
+          type: string
+        - name: seatId
+          in: formData
+          description: Id of Seat
+          required: true
+          type: string
+      responses:
+        200:
+          description: Seat successfully deleted
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /movie/create:
+    post:
+      tags:
+        - Movie
+      summary: Adds a new Movie
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: name
+          in: formData
+          description: Name of the movie
+          required: true
+          type: string
+        - name: description
+          in: formData
+          description: Description of the Movie
+          required: true
+          type: string
+        - name: date
+          in: formData
+          description: Date of the Movie
+          required: true
+          type: string
+        - name: startTime
+          in: formData
+          description: Start Time of the Movie
+          required: true
+          type: string
+        - name: screenId
+          in: formData
+          description: Id of the Screen
+          required: true
+          type: string
+      responses:
+        200:
+          description: Movie successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /movie/update/{movieId}:
+    put:
+      tags:
+        - Movie
+      summary: Update a Movie
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: movieId
+          required: true
+          type: string
+        - name: name
+          in: formData
+          description: Name of the Movie
+          type: string
+        - name: description
+          in: formData
+          description: description of the Movie
+          type: string
+        - name: date
+          in: formData
+          description: Date of the Movie (YYYY-MM-DD)
+          type: string
+        - name: start_time
+          in: formData
+          description: Start Time of the Movie
+          type: string
+        - name: screen_id
+          in: formData
+          description: Screen Id for the Movie
+          type: string
+      responses:
+        200:
+          description: Movie successfully Updated
         400:
           description: Bad request
         500:
