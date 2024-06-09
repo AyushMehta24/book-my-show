@@ -60,8 +60,6 @@ export const updateMovieDetail = async (req: Request, res: Response): Promise<vo
       screen_id: string
     }> = req.body
 
-    console.log(movieData)
-
     const validMovie: { id: string } | null = await Prisma.movie_details.findUnique({
       where: {
         id: movieId,
@@ -91,8 +89,6 @@ export const updateMovieDetail = async (req: Request, res: Response): Promise<vo
     }
     const formattedDateString = formattedDate.toISOString()
 
-    console.log(movieData.screen_id, '/////////')
-
     const validScreen: { id: string } | null = await Prisma.screens.findUnique({
       where: {
         id: movieData.screen_id,
@@ -121,6 +117,79 @@ export const updateMovieDetail = async (req: Request, res: Response): Promise<vo
     })
 
     return generalResponse(res, movie.id, 'Movie updated successfully', 'success', false, 200)
+  } catch (error: any) {
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}
+
+export const deleteMovieDetail = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const movieId = req.params.movieId
+
+    const validMovie: { id: string } | null = await Prisma.movie_details.findUnique({
+      where: {
+        id: movieId,
+        is_deleted: false,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validMovie === null) {
+      return generalResponse(res, '', 'There is no such Movie.', 'success', false, 200)
+    }
+
+    const movie = await Prisma.movie_details.update({
+      where: {
+        id: movieId,
+        is_deleted: false,
+      },
+      data: {
+        is_deleted: true,
+        deleted_at: new Date(),
+      },
+    })
+
+    return generalResponse(res, movie.id, 'Movie deleted successfully', 'success', false, 200)
+  } catch (error: any) {
+    console.log(error)
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}
+
+export const allMovieDetail = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const screenId = req.params.screenId
+
+    const validScreen: { id: string } | null = await Prisma.screens.findUnique({
+      where: {
+        id: screenId,
+        is_deleted: false,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validScreen === null) {
+      return generalResponse(res, '', 'There is no such Screen.', 'success', false, 200)
+    }
+
+    const movie = await Prisma.movie_details.findMany({
+      where: {
+        screen_id: screenId,
+        is_deleted: false,
+      },
+      select: {
+        name: true,
+        description: true,
+        start_time: true,
+        date: true,
+      },
+    })
+
+    return generalResponse(res, movie, 'Movie Details', 'success', false, 200)
   } catch (error: any) {
     console.log(error)
     return generalResponse(res, error, '', 'error', false, 400)

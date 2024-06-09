@@ -3,18 +3,18 @@
 import express, { Router } from 'express'
 import { createBooking, getBookingById, updateBooking, deleteBooking } from '../controllers/bookingController'
 
-const router: Router = express.Router()
+const booking: Router = express.Router()
 
 // POST /booking
-router.post('/', createBooking)
+booking.post('/', createBooking)
 
-// GET /booking/:id
-router.get('/:id', getBookingById)
+// // GET /booking/:id
+// booking.get('/:id', getBookingById)
 
-// PUT /booking/:id
-router.put('/:id', updateBooking)
+// // PUT /booking/:id
+// booking.put('/:id', updateBooking)
 
-// DELETE /booking/:id
-router.delete('/:id', deleteBooking)
+// // DELETE /booking/:id
+// booking.delete('/:id', deleteBooking)
 
-export default router
+export default booking

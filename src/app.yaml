@@ -505,6 +505,29 @@ paths:
         500:
           description: Internal server error
 
+  /movie/getmovies/{screenId}:
+    get:
+      tags:
+        - Movie
+      summary: All Movie.
+      description: Get all Movie Details
+      parameters:
+        - in: path
+          name: screenId
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successul Response
+          schema:
+            type: string
+            example: 'Movie String'
+        400:
+          description: User Error
+          schema:
+            type: string
+            example: 'Some Error '
+
   /movie/create:
     post:
       tags:
@@ -585,6 +608,180 @@ paths:
       responses:
         200:
           description: Movie successfully Updated
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /movie/delete/{movieId}:
+    delete:
+      tags:
+        - Movie
+      summary: Delete a Movie
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: movieId
+          required: true
+          type: string
+      responses:
+        200:
+          description: Movie successfully deleted
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /event/allevents/{ownerId}:
+    get:
+      tags:
+        - Event
+      summary: All Events.
+      description: Get all Events Detail
+      parameters:
+        - in: path
+          name: ownerId
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successul Response
+          schema:
+            type: string
+            example: 'Event string'
+        400:
+          description: User Error
+          schema:
+            type: string
+            example: 'Some Error '
+
+  /event/create:
+    post:
+      tags:
+        - Event
+      summary: Adds a new Event
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: name
+          in: formData
+          description: Name of the Event
+          required: true
+          type: string
+        - name: description
+          in: formData
+          description: Description of the Event
+          required: true
+          type: string
+        - name: date
+          in: formData
+          description: Date of the Event
+          required: true
+          type: string
+        - name: startTime
+          in: formData
+          description: Start Time of the Event
+          required: true
+          type: string
+        - name: address
+          in: formData
+          description: Address of the Event
+          required: true
+          type: string
+        - name: fair
+          in: formData
+          description: Price for the Event
+          required: true
+          type: number
+        - name: ownerId
+          in: formData
+          description: Owner ID of the Event
+          required: true
+          type: string
+      responses:
+        200:
+          description: Event successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /event/update/{eventId}:
+    put:
+      tags:
+        - Event
+      summary: Update a Event
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          type: string
+        - name: name
+          in: formData
+          description: Name of the Event
+          type: string
+        - name: description
+          in: formData
+          description: description of the Event
+          type: string
+        - name: date
+          in: formData
+          description: Date of the Movie (YYYY-MM-DD)
+          type: string
+        - name: start_time
+          in: formData
+          description: Start Time of the Movie
+          type: string
+        - name: address
+          in: formData
+          description: Address of the Event
+          type: string
+        - name: fair
+          in: formData
+          description: Price for the Event
+          type: number
+        - name: ownerId
+          in: formData
+          description: Owner ID of the Event
+          type: string
+      responses:
+        200:
+          description: Movie successfully Updated
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /event/delete/{eventId}:
+    delete:
+      tags:
+        - Event
+      summary: Delete a Event
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          type: string
+        - name: ownerId
+          in: formData
+          required: true
+          type: string
+      responses:
+        200:
+          description: Event successfully deleted
         400:
           description: Bad request
         500:

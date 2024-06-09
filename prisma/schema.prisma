@@ -23,6 +23,8 @@ model User {
 
   theaters theaters[]
 
+  events event_details[]
+
   bookings bookings[]
 }
 
@@ -108,6 +110,9 @@ model event_details {
   start_time  String
   address     String
   fair        Float
+
+  owner User @relation(fields: [owner_id] , references: [id])
+  owner_id String
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt

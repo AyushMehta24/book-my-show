@@ -2,24 +2,20 @@
 
 import express, { Router } from 'express'
 import {
+  allEventsDetail,
   createEventDetail,
-  getEventDetailById,
-  updateEventDetail,
   deleteEventDetail,
+  updateEventDetail,
 } from '../controllers/eventDetailController'
 
-const router: Router = express.Router()
+const event: Router = express.Router()
 
-// POST /event-detail
-router.post('/', createEventDetail)
+event.post('/create', createEventDetail)
 
-// GET /event-detail/:id
-router.get('/:id', getEventDetailById)
+event.get('/allevents/:ownerId', allEventsDetail)
 
-// PUT /event-detail/:id
-router.put('/:id', updateEventDetail)
+event.put('/update/:eventId', updateEventDetail)
 
-// DELETE /event-detail/:id
-router.delete('/:id', deleteEventDetail)
+event.delete('/delete/:eventId', deleteEventDetail)
 
-export default router
+export default event
