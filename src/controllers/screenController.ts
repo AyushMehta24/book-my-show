@@ -79,7 +79,7 @@ export const getAllScreens = async (req: Request, res: Response): Promise<void> 
       },
     })
 
-    if (screens) {
+    if (screens.length >0) {
       return generalResponse(res, screens, 'All Screens in Thaeter', 'success', false, 200)
     } else {
       return generalResponse(res, screens, 'No Screens Found', 'success', false, 200)

@@ -2,19 +2,16 @@
 
 import express, { Router } from 'express'
 import { createTheater, deleteTheater, getAllTheater, updateTheater } from '../controllers/theaterController'
+import { createTheaterValidate, updateTheaterValidate } from '../middlewares/theatervalidator'
 
 const theater: Router = express.Router()
 
-// POST /theater
-theater.post('/create', createTheater)
+theater.post('/create',createTheaterValidate, createTheater)
 
-// // GET /theater/:id
 theater.get('/getalltheater', getAllTheater)
 
-// // PUT /theater/:id
-theater.put('/update/:id', updateTheater)
+theater.put('/update/:id',updateTheaterValidate, updateTheater)
 
-// // DELETE /theater/:id
 theater.delete('/delete/:id', deleteTheater)
 
 export default theater

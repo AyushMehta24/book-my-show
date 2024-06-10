@@ -39,10 +39,10 @@ export const getAllUser = async (req: Request, res: Response) => {
         role: true,
       },
     })
-    if (data) {
+    if (data.length > 0) {
       return generalResponse(res, data, 'All Users', 'success', false, 200)
     } else {
-      return generalResponse(res, data, 'No User Found', 'success', false, 200)
+      return generalResponse(res, data, 'There is no Users', 'success', false, 200)
     }
   } catch (error) {
     return generalResponse(res, error, '', 'error', false, 400)

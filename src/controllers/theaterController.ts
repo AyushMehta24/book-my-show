@@ -54,7 +54,7 @@ export const getAllTheater = async (req: Request, res: Response): Promise<void> 
       },
     })
 
-    if (theater) {
+    if (theater.length>0) {
       return generalResponse(res, theater, 'All Theaters', 'success', false, 200)
     } else {
       return generalResponse(res, theater, 'No theater Found', 'success', false, 200)

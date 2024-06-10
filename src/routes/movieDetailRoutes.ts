@@ -2,14 +2,15 @@
 
 import express, { Router } from 'express'
 import { allMovieDetail, createMovieDetail, deleteMovieDetail, updateMovieDetail } from '../controllers/movieController'
+import { createMovieValidate, updateMovieValidate } from '../middlewares/movieValidator'
 
 const movie: Router = express.Router()
 
-movie.post('/create', createMovieDetail)
+movie.post('/create',createMovieValidate, createMovieDetail)
 
 movie.get('/getmovies/:screenId', allMovieDetail)
 
-movie.put('/update/:movieId', updateMovieDetail)
+movie.put('/update/:movieId',updateMovieValidate, updateMovieDetail)
 
 movie.delete('/delete/:movieId', deleteMovieDetail)
 

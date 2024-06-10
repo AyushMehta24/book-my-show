@@ -63,7 +63,8 @@ model seats {
   screen_id String
   tickets   tickets[]
 
-  seatTypeId seat_types[]     
+  seatType   seat_types @relation(fields: [seatTypeId], references: [id])
+  seatTypeId String
 
   screen screens @relation(fields: [screen_id], references: [id])
 
@@ -87,10 +88,10 @@ model seat_types {
 }
 
 model movie_details {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String
-  date        DateTime
+  date        DateTime @db.Date()
   start_time  String
   screen_id   String
 
@@ -103,15 +104,15 @@ model movie_details {
 }
 
 model event_details {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String
-  date        DateTime
+  date        DateTime @db.Date()
   start_time  String
   address     String
   fair        Float
 
-  owner User @relation(fields: [owner_id] , references: [id])
+  owner    User   @relation(fields: [owner_id], references: [id])
   owner_id String
 
   created_at DateTime  @default(now())

@@ -33,13 +33,10 @@ export const createSeat = async (req: Request, res: Response): Promise<void> => 
       const seat = await prisma.seats.create({
         data: {
           screen_id: screenId,
-          seatTypeId: {
-            connect: {
-              id: typeId,
-            },
+          seatTypeId: typeId
           },
         },
-      })
+      )
 
       allSeats.push(seat.id)
     }
@@ -80,11 +77,7 @@ export const updateSeat = async (req: Request, res: Response): Promise<void> => 
       },
       data: {
         screen_id: screenId,
-        seatTypeId: {
-          connect: {
-            id: typeId,
-          },
-        },
+        seatTypeId: typeId
       },
       select: {
         id: true,
@@ -162,15 +155,20 @@ export const allSeats = async (req: Request, res: Response): Promise<void> => {
       },
       select: {
         id: true,
-        seatTypeId: {
-          select: {
-            type: true,
-          },
-        },
+        seatType:{
+          select:{
+            type:true
+          }
+        }
       },
     })
 
-    return generalResponse(res, seat, 'All Seats', 'success', false, 200)
+    if (seat.length > 0) {
+      return generalResponse(res, seat, 'All Seats', 'success', false, 200)
+    }
+    return generalResponse(res, "", 'There is no Seats for Now', 'success', false, 200)
+
+
   } catch (error) {
     return generalResponse(res, error, '', 'error', false, 400)
   }

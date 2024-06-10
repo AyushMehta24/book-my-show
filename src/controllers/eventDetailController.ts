@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import generalResponse from '../helper/generalResponse.helper'
 import { PrismaClient } from '@prisma/client'
+import { deleteTheater } from './theaterController'
 const Prisma = new PrismaClient()
 
 export const createEventDetail = async (req: Request, res: Response): Promise<void> => {
@@ -9,19 +10,11 @@ export const createEventDetail = async (req: Request, res: Response): Promise<vo
 
     const formattedDate = new Date(date)
 
-    if (isNaN(formattedDate.getTime())) {
-      throw new Error('Invalid date')
-    }
-
-    formattedDate.setHours(startTime.split(':')[0], startTime.split(':')[1], 0, 0)
-
-    const formattedDateString = formattedDate.toISOString()
-
     const event = await Prisma.event_details.create({
       data: {
         name: name,
         description: description,
-        date: new Date(formattedDateString),
+        date: formattedDate,
         start_time: startTime,
         address: address,
         fair: Number(fair),
@@ -42,8 +35,25 @@ export const createEventDetail = async (req: Request, res: Response): Promise<vo
 export const updateEventDetail = async (req: Request, res: Response): Promise<void> => {
   try {
     const eventId = req.params.eventId
-    const { address, fair, name, description, date, start_time, ownerId } = req.body
 
+    let eventData = req.body
+
+    for (let key in eventData) {
+      if (eventData[key] === undefined) {
+        delete eventData[key]
+      }
+    }
+
+    if(eventData.date){
+      eventData.date = new Date(eventData.date)
+    }
+
+    if (eventData.fair) {
+      eventData.fair = parseFloat(eventData.fair)
+    }
+
+
+  
     const validEvent = await Prisma.event_details.findUnique({
       where: {
         id: eventId,
@@ -60,7 +70,7 @@ export const updateEventDetail = async (req: Request, res: Response): Promise<vo
 
     const validOwner = await Prisma.user.findUnique({
       where: {
-        id: ownerId,
+        id: eventData.owner_id,
         is_deleted: false,
       },
       select: {
@@ -74,7 +84,7 @@ export const updateEventDetail = async (req: Request, res: Response): Promise<vo
 
     const validEventOwner = await Prisma.user.findUnique({
       where: {
-        id: ownerId,
+        id: eventData.owner_id,
         is_deleted: false,
         events: {
           some: {
@@ -91,30 +101,13 @@ export const updateEventDetail = async (req: Request, res: Response): Promise<vo
       return generalResponse(res, '', "You don't have access to this Event", 'success', false, 200)
     }
 
-    const formattedDate = new Date(date)
-
-    if (isNaN(formattedDate.getTime())) {
-      throw new Error('Invalid date')
-    }
-
-    formattedDate.setHours(start_time.split(':')[0], start_time.split(':')[1], 0, 0)
-
-    const formattedDateString = formattedDate.toISOString()
+    console.log(eventData);
 
     const event = await Prisma.event_details.update({
       where: { id: eventId, is_deleted: false },
-      data: {
-        name: name,
-        description: description,
-        date: new Date(formattedDateString),
-        start_time: start_time,
-        address: address,
-        fair: Number(fair),
-        owner: {
-          connect: {
-            id: ownerId,
-          },
-        },
+      data: eventData,
+      select: {
+        id: true,
       },
     })
 

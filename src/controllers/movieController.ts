@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import generalResponse from '../helper/generalResponse.helper'
 import { PrismaClient } from '@prisma/client'
+import { deleteSeatValidate } from '../middlewares/seatValidator';
+import { deleteSeat } from './seatController';
 const Prisma = new PrismaClient()
 
 export const createMovieDetail = async (req: Request, res: Response): Promise<void> => {
@@ -9,13 +11,7 @@ export const createMovieDetail = async (req: Request, res: Response): Promise<vo
 
     const formattedDate = new Date(date)
 
-    if (isNaN(formattedDate.getTime())) {
-      throw new Error('Invalid date')
-    }
-
-    formattedDate.setHours(startTime.split(':')[0], startTime.split(':')[1], 0, 0)
-
-    const formattedDateString = formattedDate.toISOString()
+   
 
     const validScreen: { id: string } | null = await Prisma.screens.findUnique({
       where: {
@@ -35,7 +31,7 @@ export const createMovieDetail = async (req: Request, res: Response): Promise<vo
       data: {
         name: name,
         description: description,
-        date: new Date(formattedDateString),
+        date: new Date(formattedDate),
         start_time: startTime,
         screen_id: screenId,
       },
@@ -51,13 +47,13 @@ export const updateMovieDetail = async (req: Request, res: Response): Promise<vo
   try {
     const movieId = req.params.movieId
 
-    const movieData: Partial<{
-      name: string
-      description: string
-      date: string | number | Date
-      start_time: string
-      screen_id: string
-    }> = req.body
+    let movieData = req.body
+
+    for (let key in movieData) {
+      if (movieData[key] === undefined) {
+        delete movieData[key]
+      }
+    }
 
     const validMovie: { id: string } | null = await Prisma.movie_details.findUnique({
       where: {
@@ -73,20 +69,9 @@ export const updateMovieDetail = async (req: Request, res: Response): Promise<vo
       return generalResponse(res, '', 'There is no such Movie.', 'success', false, 200)
     }
 
-    const formattedDate = movieData.date ? new Date(movieData.date) : undefined
-
-    if (!formattedDate || isNaN(formattedDate.getTime())) {
-      throw new Error('Invalid date')
+    if(movieData.date){
+      movieData.date = new Date(movieData.date)
     }
-
-    if (movieData.start_time) {
-      const [hours, minutes] = movieData.start_time.split(':').map(Number)
-
-      formattedDate.setHours(hours, minutes, 0, 0)
-    } else {
-      throw new Error('Start time is not provided')
-    }
-    const formattedDateString = formattedDate.toISOString()
 
     const validScreen: { id: string } | null = await Prisma.screens.findUnique({
       where: {
@@ -102,8 +87,6 @@ export const updateMovieDetail = async (req: Request, res: Response): Promise<vo
       return generalResponse(res, '', 'There is no such screen.', 'success', false, 200)
     }
 
-    const formattedData = { ...movieData, date: formattedDateString }
-
     const movie = await Prisma.movie_details.update({
       where: {
         id: movieId,
@@ -112,7 +95,7 @@ export const updateMovieDetail = async (req: Request, res: Response): Promise<vo
           equals: movieData.screen_id,
         },
       },
-      data: formattedData,
+      data: movieData,
     })
 
     return generalResponse(res, movie.id, 'Movie updated successfully', 'success', false, 200)

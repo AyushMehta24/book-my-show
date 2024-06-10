@@ -26,19 +26,39 @@ export const createSeatType = async (req: Request, res: Response): Promise<void>
 
 export const updateSeatType = async (req: Request, res: Response): Promise<void> => {
   try {
-    let { type, fair } = req.body
-    const seatTypeId:string = req.params.id
-    fair = Number(fair)
+    let seatData = req.body
+
+    for (let key in seatData) {
+      if (seatData[key] === undefined) {
+        delete seatData[key]
+      }
+    }
+
+    if (seatData.fair) {
+      seatData = { ...seatData, fair: parseFloat(seatData.fair) }
+    }
+
+    const seatTypeId: string = req.params.id
+
+    const validType = await Prisma.seat_types.findUnique({
+      where: {
+        id: seatTypeId,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validType === null) {
+      return generalResponse(res, '', 'There is no such Seat Type', 'success', false, 200)
+    }
 
     const data: { id: string } = await Prisma.seat_types.update({
-      where:{
-        id:seatTypeId,
-        is_deleted:false
+      where: {
+        id: seatTypeId,
+        is_deleted: false,
       },
-      data: {
-        type: type,
-        fair: fair,
-      },
+      data: seatData,
       select: {
         id: true,
       },
