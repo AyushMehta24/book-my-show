@@ -73,6 +73,189 @@ paths:
         500:
           description: Internal server error
 
+  /user/createwiththeater:
+    post:
+      tags:
+      - User
+      summary: Adds a new user with Theater
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: name
+        in: formData
+        description: Name of the user
+        required: true
+        type: string
+      - name: email
+        in: formData
+        description: Email of the user
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: Password of the user
+        required: true
+        type: string
+      - name: contact
+        in: formData
+        description: Contact number of the user
+        required: true
+        type: string
+      - name: role
+        in: formData
+        description: Role of the user
+        required: true
+        type: string
+        enum:
+        - owner
+        - user
+      - name: theaterName
+        in: formData
+        description: Nmae of the Theater
+        required: true
+        type: string
+      - name: theaterAddress
+        in: formData
+        description: Address of the Theater
+        required: true
+        type: string
+      responses:
+        200:
+          description: User successfully created with Theater
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /user/createwithscreen:
+    post:
+      tags:
+      - User
+      summary: Adds a new user with Theater with screen
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: name
+        in: formData
+        description: Name of the user
+        required: true
+        type: string
+      - name: email
+        in: formData
+        description: Email of the user
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: Password of the user
+        required: true
+        type: string
+      - name: contact
+        in: formData
+        description: Contact number of the user
+        required: true
+        type: string
+      - name: role
+        in: formData
+        description: Role of the user
+        required: true
+        type: string
+        enum:
+        - owner
+        - user
+      - name: theaterName
+        in: formData
+        description: Nmae of the Theater
+        required: true
+        type: string
+      - name: theaterAddress
+        in: formData
+        description: Address of the Theater
+        required: true
+        type: string
+      - name: numScreen
+        in: formData
+        description: Number of Screen
+        required: true
+        type: number
+      responses:
+        200:
+          description: User successfully created with Theater with Screen
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /user/createwithseat:
+    post:
+      tags:
+      - User
+      summary: Adds a new user with Theater with screen with Seat
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: name
+        in: formData
+        description: Name of the user
+        required: true
+        type: string
+      - name: email
+        in: formData
+        description: Email of the user
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: Password of the user
+        required: true
+        type: string
+      - name: contact
+        in: formData
+        description: Contact number of the user
+        required: true
+        type: string
+      - name: role
+        in: formData
+        description: Role of the user
+        required: true
+        type: string
+        enum:
+        - owner
+        - user
+      - name: theaterName
+        in: formData
+        description: Nmae of the Theater
+        required: true
+        type: string
+      - name: theaterAddress
+        in: formData
+        description: Address of the Theater
+        required: true
+        type: string
+      - name: numSeat
+        in: formData
+        description: Number of Seats
+        required: true
+        type: number
+      - name: seatTypeId
+        in: formData
+        description: Type of Seat
+        required: true
+        type: string
+      responses:
+        200:
+          description: User successfully created with Theater with Screen With Seats
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
   /user/update/{id}:
     put:
       tags:
@@ -191,6 +374,87 @@ paths:
         500:
           description: Internal server error
 
+  /theater/createtheaterwithscreen:
+    post:
+      tags:
+      - Theater
+      summary: Adds a new theatre With Screen
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: name
+        in: formData
+        description: Name of the theatre
+        required: true
+        type: string
+      - name: address
+        in: formData
+        description: Address of the theatre
+        required: true
+        type: string
+      - name: owner_id
+        in: formData
+        description: Id of Owner
+        required: true
+        type: string
+      - name: numScreen
+        in: formData
+        description: Number of screen
+        required: true
+        type: number
+      responses:
+        200:
+          description: Theatre successfully created With Screens
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /theater/createtheaterwithseat:
+    post:
+      tags:
+      - Theater
+      summary: Adds a new theatre With Screen With Seat
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: name
+        in: formData
+        description: Name of the theatre
+        required: true
+        type: string
+      - name: address
+        in: formData
+        description: Address of the theatre
+        required: true
+        type: string
+      - name: owner_id
+        in: formData
+        description: Id of Owner
+        required: true
+        type: string
+      - name: numSeat
+        in: formData
+        description: Number of Seats
+        required: true
+        type: number
+      - name: seatTypeId
+        in: formData
+        description: Type Of Seat
+        required: true
+        type: string
+      responses:
+        200:
+          description: Theatre successfully created With Seats
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
   /theater/update/{id}:
     put:
       tags:
@@ -292,6 +556,80 @@ paths:
       responses:
         200:
           description: Theatre successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /screen/createscreenwithseats/{theaterId}:
+    post:
+      tags:
+      - Screen
+      summary: Adds a new Screen with seats
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: theaterId
+        required: true
+        type: string
+      - name: seatTypeId
+        in: formData
+        description: Type of Seat
+        required: true
+        type: string
+      - name: numSeat
+        in: formData
+        description: Number of Seats
+        required: true
+        type: number
+      responses:
+        200:
+          description: Screen successfully created with Seats
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /screen/createscreenwithmovie/{theaterId}:
+    post:
+      tags:
+      - Screen
+      summary: Adds a new Screen with seats
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: path
+        name: theaterId
+        required: true
+        type: string
+      - name: movieName
+        in: formData
+        description: Name of Movie
+        required: true
+        type: string
+      - name: movieDescription
+        in: formData
+        description: Description of Movie
+        required: true
+        type: string
+      - name: movieDate
+        in: formData
+        description: Date of Movie
+        required: true
+        type: string
+      - name: movieTime
+        in: formData
+        description: Time of Movie
+        required: true
+        type: string
+      responses:
+        200:
+          description: Screen successfully created with Seats
         400:
           description: Bad request
         500:
@@ -571,6 +909,59 @@ paths:
         500:
           description: Internal server error
 
+  /movie/createmoviewithbooking:
+    post:
+      tags:
+      - Movie
+      summary: Adds a new Movie with Booking
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: name
+        in: formData
+        description: Name of the movie
+        required: true
+        type: string
+      - name: description
+        in: formData
+        description: Description of the Movie
+        required: true
+        type: string
+      - name: date
+        in: formData
+        description: Date of the Movie
+        required: true
+        type: string
+      - name: startTime
+        in: formData
+        description: Start Time of the Movie
+        required: true
+        type: string
+      - name: screenId
+        in: formData
+        description: Id of the Screen
+        required: true
+        type: string
+      - name: ownerId
+        in: formData
+        description: Id of the owner
+        required: true
+        type: string
+      - name: seatId
+        in: formData
+        description: Id of the Seat
+        required: true
+        type: string
+      responses:
+        200:
+          description: Movie successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
   /movie/update/{movieId}:
     put:
       tags:
@@ -707,6 +1098,59 @@ paths:
       responses:
         200:
           description: Event successfully created
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /event/createeventwithbooking:
+    post:
+      tags:
+      - Event
+      summary: Adds a new Event with Booking
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: name
+        in: formData
+        description: Name of the Event
+        required: true
+        type: string
+      - name: description
+        in: formData
+        description: Description of the Event
+        required: true
+        type: string
+      - name: date
+        in: formData
+        description: Date of the Event
+        required: true
+        type: string
+      - name: startTime
+        in: formData
+        description: Start Time of the Event
+        required: true
+        type: string
+      - name: address
+        in: formData
+        description: Address of the Event
+        required: true
+        type: string
+      - name: fair
+        in: formData
+        description: Price for the Event
+        required: true
+        type: number
+      - name: ownerId
+        in: formData
+        description: Owner ID of the Event
+        required: true
+        type: string
+      responses:
+        200:
+          description: Event successfully created With Booking
         400:
           description: Bad request
         500:
@@ -942,3 +1386,4 @@ paths:
           description: Bad request
         500:
           description: Internal server error
+

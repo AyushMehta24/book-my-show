@@ -25,19 +25,21 @@ export const createScreen = async (req: Request, res: Response): Promise<void> =
 
     let allScreens: string[] = []
 
-    for (let i: number = 0; i < numScreen; i++) {
-      const screen: { id: string } = await Prisma.screens.create({
-        data: {
-          theater: {
-            connect: { id: theaterId },
+    await Prisma.$transaction(async (transaction) => {
+      for (let i: number = 0; i < numScreen; i++) {
+        const screen: { id: string } = await transaction.screens.create({
+          data: {
+            theater: {
+              connect: { id: theaterId },
+            },
           },
-        },
-        select: {
-          id: true,
-        },
-      })
-      allScreens.push(screen.id)
-    }
+          select: {
+            id: true,
+          },
+        })
+        allScreens.push(screen.id)
+      }
+    })
 
     if (allScreens.length > 0) {
       return generalResponse(res, allScreens, 'Screens inserted successfully', 'success', false, 200)
@@ -79,7 +81,7 @@ export const getAllScreens = async (req: Request, res: Response): Promise<void> 
       },
     })
 
-    if (screens.length >0) {
+    if (screens.length > 0) {
       return generalResponse(res, screens, 'All Screens in Thaeter', 'success', false, 200)
     } else {
       return generalResponse(res, screens, 'No Screens Found', 'success', false, 200)
@@ -165,6 +167,138 @@ export const deleteScreen = async (req: Request, res: Response): Promise<void> =
       return generalResponse(res, '', 'Screen Not Found', 'success', false, 200)
     }
   } catch (error) {
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}
+
+//save
+
+export const createScreenWithSeats = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const theaterId: string = req.params.theaterId
+    const seatTypeId: string = req.body.seatTypeId
+    const numSeat: number = Number(req.body.numSeat)
+
+    const validTheater: { id: string } | null = await Prisma.theaters.findUnique({
+      where: {
+        id: theaterId,
+        is_deleted: false,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validTheater === null) {
+      return generalResponse(res, '', 'There is no such Theater.', 'success', false, 200)
+    }
+
+    let allScreens: string[] = []
+
+    const seatsData = new Array(numSeat).fill({ seatTypeId: seatTypeId})
+
+    const screen = await Prisma.screens.create({
+      data: {
+        theater: {
+          connect: {
+            id: theaterId,
+          },
+        },
+        seats: {
+          createMany: {
+            data: seatsData,
+          },
+        },
+      },
+      select: {
+        id: true,
+        theater_id: true,
+        seats: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    if (screen.id) {
+      return generalResponse(
+        res,
+        { screen },
+        `Screens inserted successfully with ${numSeat} seats`,
+        'success',
+        false,
+        200,
+      )
+    } else {
+      return generalResponse(res, allScreens, 'No screens inserted', 'success', false, 200)
+    }
+  } catch (error) {
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}
+
+export const createScreenWithMovie = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const theaterId: string = req.params.theaterId
+
+    const { movieName, movieDescription, movieDate, movieTime } = req.body
+
+    const finalMovieDate = new Date(movieDate)
+
+    const validTheater: { id: string } | null = await Prisma.theaters.findUnique({
+      where: {
+        id: theaterId,
+        is_deleted: false,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validTheater === null) {
+      return generalResponse(res, '', 'There is no such Theater.', 'success', false, 200)
+    }
+
+    let allScreens: string[] = []
+
+    const screen = await Prisma.screens.create({
+      data: {
+        theater: {
+          connect: {
+            id: theaterId,
+          },
+        },
+        movies: {
+          create: {
+            name: movieName,
+            description: movieDescription,
+            date: finalMovieDate,
+            start_time: movieTime,
+          },
+        },
+      },
+      select: {
+        id: true,
+        theater_id: true,
+        movies: {
+          select: {
+            name: true,
+            description: true,
+            date: true,
+            start_time: true,
+          },
+        },
+      },
+    })
+
+    if (screen.id) {
+      return generalResponse(res, { screen }, `Screens inserted successfully with Movie`, 'success', false, 200)
+    } else {
+      return generalResponse(res, allScreens, 'No screens inserted', 'success', false, 200)
+    }
+  } catch (error) {
+    console.log(error)
     return generalResponse(res, error, '', 'error', false, 400)
   }
 }

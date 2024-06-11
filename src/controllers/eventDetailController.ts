@@ -44,7 +44,7 @@ export const updateEventDetail = async (req: Request, res: Response): Promise<vo
       }
     }
 
-    if(eventData.date){
+    if (eventData.date) {
       eventData.date = new Date(eventData.date)
     }
 
@@ -52,8 +52,6 @@ export const updateEventDetail = async (req: Request, res: Response): Promise<vo
       eventData.fair = parseFloat(eventData.fair)
     }
 
-
-  
     const validEvent = await Prisma.event_details.findUnique({
       where: {
         id: eventId,
@@ -101,7 +99,7 @@ export const updateEventDetail = async (req: Request, res: Response): Promise<vo
       return generalResponse(res, '', "You don't have access to this Event", 'success', false, 200)
     }
 
-    console.log(eventData);
+    console.log(eventData)
 
     const event = await Prisma.event_details.update({
       where: { id: eventId, is_deleted: false },
@@ -207,6 +205,47 @@ export const allEventsDetail = async (req: Request, res: Response): Promise<void
     })
 
     return generalResponse(res, events, 'Events Details', 'success', false, 200)
+  } catch (error: any) {
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}
+
+export const createEventAndBooking = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { address, fair, name, description, date, startTime, ownerId } = req.body
+
+    const formattedDate = new Date(date)
+
+    const data = await Prisma.$transaction(async (transaction) => {
+      const event = await transaction.event_details.create({
+        data: {
+          name: name,
+          description: description,
+          date: formattedDate,
+          start_time: startTime,
+          address: address,
+          fair: Number(fair),
+          owner: {
+            connect: {
+              id: ownerId,
+            },
+          },
+        },
+        select: {
+          id: true,
+        },
+      })
+      const booking = await transaction.bookings.create({
+        data: {
+          event_type: 'event',
+          event_id: event.id,
+          user_id: ownerId,
+        },
+      })
+      return event
+    })
+
+    return generalResponse(res, data.id, 'event created successfully with booking', 'success', false, 200)
   } catch (error: any) {
     return generalResponse(res, error, '', 'error', false, 400)
   }

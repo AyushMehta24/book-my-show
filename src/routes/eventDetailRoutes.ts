@@ -3,6 +3,7 @@
 import express, { Router } from 'express'
 import {
   allEventsDetail,
+  createEventAndBooking,
   createEventDetail,
   deleteEventDetail,
   updateEventDetail,
@@ -12,6 +13,7 @@ import { createEventValidate, updateEventValidate } from '../middlewares/eventVa
 const event: Router = express.Router()
 
 event.post('/create',createEventValidate, createEventDetail)
+event.post('/createeventwithbooking',createEventValidate, createEventAndBooking)
 
 event.get('/allevents/:ownerId', allEventsDetail)
 

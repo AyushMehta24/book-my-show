@@ -1,4 +1,3 @@
-import argon2 from 'argon2'
 import { Request, Response } from 'express'
 import generalResponse from '../helper/generalResponse.helper'
 import { PrismaClient } from '@prisma/client'

@@ -12,12 +12,11 @@ config()
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.json())
 
-const user = YAML.load('src/app.yaml' )
-app.use('/api', swaggerui.serve, swaggerui.setup(user ))
+const user = YAML.load('src/app.yaml')
+app.use('/api', swaggerui.serve, swaggerui.setup(user))
 
 const port = process.env.PORT || 8000
 
-app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use('/', router)

@@ -54,7 +54,7 @@ export const getAllTheater = async (req: Request, res: Response): Promise<void> 
       },
     })
 
-    if (theater.length>0) {
+    if (theater.length > 0) {
       return generalResponse(res, theater, 'All Theaters', 'success', false, 200)
     } else {
       return generalResponse(res, theater, 'No theater Found', 'success', false, 200)
@@ -125,6 +125,106 @@ export const deleteTheater = async (req: Request, res: Response): Promise<void> 
     } else {
       return generalResponse(res, '', 'Theater Not Found', 'success', false, 200)
     }
+  } catch (error) {
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}
+
+//save
+
+export const createTheaterWithScreen = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, address, owner_id, numScreen } = req.body
+    const numScreens = Number(numScreen)
+
+    const screenData = new Array(numScreens).fill({})
+
+    const validOwner: { id: string } | null = await Prisma.user.findUnique({
+      where: {
+        id: owner_id,
+        is_deleted: false,
+        role: 'owner',
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validOwner === null) {
+      return generalResponse(res, '', 'There is no such owner.', 'success', false, 200)
+    }
+
+    const theater: { id: string } = await Prisma.theaters.create({
+      data: {
+        name,
+        address,
+        owners: {
+          connect: {
+            id: owner_id,
+          },
+        },
+        screens: {
+          createMany: {
+            data: screenData,
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    })
+    return generalResponse(res, theater.id, 'Theater inserted successfully With Screens', 'success', false, 200)
+  } catch (error) {
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+}
+
+export const createTheaterWithSeat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, address, owner_id, numSeat, seatTypeId } = req.body
+    const numSeats = Number(numSeat)
+
+    const seatData = new Array(numSeats).fill({ seatTypeId: seatTypeId })
+
+    const validOwner: { id: string } | null = await Prisma.user.findUnique({
+      where: {
+        id: owner_id,
+        is_deleted: false,
+        role: 'owner',
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (validOwner === null) {
+      return generalResponse(res, '', 'There is no such owner.', 'success', false, 200)
+    }
+
+    const theater: { id: string } = await Prisma.theaters.create({
+      data: {
+        name,
+        address,
+        owners: {
+          connect: {
+            id: owner_id,
+          },
+        },
+        screens: {
+          create: {
+            seats: {
+              createMany: {
+                data: seatData,
+              },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    })
+    return generalResponse(res, theater.id, 'Theater inserted successfully With Seats', 'success', false, 200)
   } catch (error) {
     return generalResponse(res, error, '', 'error', false, 400)
   }

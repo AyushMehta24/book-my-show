@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "omitApi"]
 }
 
 model User {
@@ -169,4 +169,9 @@ model payments {
   fair Float
 
   status Boolean
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  is_deleted Boolean   @default(false)
 }
