@@ -3,6 +3,10 @@ import cors from 'cors'
 import swaggerui from 'swagger-ui-express'
 import YAML from 'yamljs'
 import bodyParser from 'body-parser'
+import passport from 'passport'
+import passportConfig from './config/passport'
+
+passportConfig(passport)
 
 import { config } from 'dotenv'
 import router from './routes/route'
